@@ -9,6 +9,8 @@ namespace ParkTogether.Domain.Interfaces
 
         Task<Employee> CreateEmployeeAsync(Employee employee);
 
+        Task<Employee> GetEmployeeByIdAsync(Guid Id);
+
         Task<Employee> EditEmployeeAsync(Employee employee);
 
         Task<Employee> DeleteEmployeeAsync(Guid Id);
