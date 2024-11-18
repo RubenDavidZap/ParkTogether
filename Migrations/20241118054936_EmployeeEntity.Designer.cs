@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ParkTogether.DAL;
 
@@ -11,9 +12,11 @@ using ParkTogether.DAL;
 namespace ParkTogether.Migrations
 {
     [DbContext(typeof(DateBaseContext))]
-    partial class DateBaseContextModelSnapshot : ModelSnapshot
+    [Migration("20241118054936_EmployeeEntity")]
+    partial class EmployeeEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -88,7 +91,7 @@ namespace ParkTogether.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("Employees");
+                    b.ToTable("employees");
                 });
 #pragma warning restore 612, 618
         }
