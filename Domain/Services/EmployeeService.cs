@@ -82,7 +82,7 @@ namespace ParkTogether.Domain.Services
             try
             {
                 var employee = await GetEmployeeByIdAsync(Id);
-                if (employee != null) 
+                if (employee == null) 
                 {
                     return null;
                 }
