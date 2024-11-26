@@ -20,6 +20,10 @@ namespace ParkTogether.DAL
         #region Dbsets
         public DbSet<Administrator> Administrators { get; set; }
         public DbSet<Employee> Employees { get; set; }
+        public DbSet<ParkingCell> ParkingCells { get; set; }
+        public DbSet<Guest> Guests { get; set; }
+        public DbSet<Vehicle> Vehicles { get; set; }
+        public DbSet<Reservation> Reservations { get; set; }
         #endregion
     }
 }
