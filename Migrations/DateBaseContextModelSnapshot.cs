@@ -43,6 +43,10 @@ namespace ParkTogether.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("Mail")
@@ -259,7 +263,7 @@ namespace ParkTogether.Migrations
                     b.HasOne("ParkTogether.DAL.Entities.Vehicle", "Vehicle")
                         .WithMany("Reservations")
                         .HasForeignKey("VehicleId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Employee");

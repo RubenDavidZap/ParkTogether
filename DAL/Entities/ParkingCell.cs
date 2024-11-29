@@ -19,6 +19,6 @@ namespace ParkTogether.DAL.Entities
         [Display(Name = "Id Administrador")]
         public Guid AdministratorId { get; set; }
 
-        public ICollection<Reservation> Reservations { get; set; }
+        public ICollection<Reservation>? Reservations { get; set; }
     }
 }
