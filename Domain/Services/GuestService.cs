@@ -1,25 +1,25 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ParkTogether.DAL;
 using ParkTogether.DAL.Entities;
+using ParkTogether.DAL;
 using ParkTogether.Domain.Interfaces;
 
 namespace ParkTogether.Domain.Services
 {
-    public class ParkingCellService : IParkingCellService
+    public class GuestService : IGuestService
     {
         private readonly DateBaseContext _context;
 
-        public ParkingCellService(DateBaseContext context)
+        public GuestService(DateBaseContext context)
         {
             _context = context;
         }
-        public async Task<IEnumerable<ParkingCell>> GetParkingCellAsync()
+        public async Task<IEnumerable<Guest>> GetGuestAsync()
         {
 
             try
             {
-                var ParkingCell = await _context.ParkingCells.ToListAsync();
-                return ParkingCell;
+                var Guest = await _context.Guests.ToListAsync();
+                return Guest;
 
             }
             catch (DbUpdateConcurrencyException dbUpdateException)
@@ -28,13 +28,13 @@ namespace ParkTogether.Domain.Services
                 throw new Exception(dbUpdateException.InnerException?.Message ?? dbUpdateException.Message);
             }
         }
-        public async Task<ParkingCell> GetParkingCellByIdAsync(Guid Id)
+        public async Task<Guest> GetGuestByIdAsync(Guid Id)
         {
 
             try
             {
-                var ParkingCell = await _context.ParkingCells.FirstOrDefaultAsync(x => x.Id == Id);
-                return ParkingCell;
+                var Guest = await _context.Guests.FirstOrDefaultAsync(x => x.Id == Id);
+                return Guest;
             }
             catch (DbUpdateConcurrencyException dbUpdateException)
             {
@@ -42,17 +42,17 @@ namespace ParkTogether.Domain.Services
                 throw new Exception(dbUpdateException.InnerException?.Message ?? dbUpdateException.Message);
             }
         }
-        public async Task<ParkingCell> CreateParkingCellAsync(ParkingCell parkingcell)
+        public async Task<Guest> CreateGuestAsync(Guest Guest)
         {
 
             try
             {
-                parkingcell.Id = Guid.NewGuid();
-                parkingcell.CreatedDate = DateTime.Now;
+                Guest.Id = Guid.NewGuid();
+                Guest.CreatedDate = DateTime.Now;
 
-                _context.ParkingCells.Add(parkingcell);
+                _context.Guests.Add(Guest);
                 await _context.SaveChangesAsync();
-                return parkingcell;
+                return Guest;
 
             }
             catch (DbUpdateConcurrencyException dbUpdateException)
@@ -62,14 +62,14 @@ namespace ParkTogether.Domain.Services
             }
         }
 
-        public async Task<ParkingCell> EditParkingCellAsync(ParkingCell parkingcell)
+        public async Task<Guest> EditGuestAsync(Guest Guest)
         {
             try
             {
-                parkingcell.ModifiedDate = DateTime.Now;
-                _context.ParkingCells.Update(parkingcell);
+                Guest.ModifiedDate = DateTime.Now;
+                _context.Guests.Update(Guest);
                 await _context.SaveChangesAsync();
-                return parkingcell;
+                return Guest;
             }
             catch (DbUpdateConcurrencyException dbUpdateException)
             {
@@ -77,18 +77,18 @@ namespace ParkTogether.Domain.Services
                 throw new Exception(dbUpdateException.InnerException?.Message ?? dbUpdateException.Message);
             }
         }
-        public async Task<ParkingCell> DeleteParkingCellAsync(Guid Id)
+        public async Task<Guest> DeleteGuestAsync(Guid Id)
         {
             try
             {
-                var ParkingCell = await GetParkingCellByIdAsync(Id);
-                if (ParkingCell == null)
+                var Guest = await GetGuestByIdAsync(Id);
+                if (Guest == null)
                 {
                     return null;
                 }
-                _context.ParkingCells.Remove(ParkingCell);
+                _context.Guests.Remove(Guest);
                 await _context.SaveChangesAsync();
-                return ParkingCell;
+                return Guest;
             }
             catch (DbUpdateConcurrencyException dbUpdateException)
             {
@@ -96,6 +96,5 @@ namespace ParkTogether.Domain.Services
                 throw new Exception(dbUpdateException.InnerException?.Message ?? dbUpdateException.Message);
             }
         }
-
     }
 }

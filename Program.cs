@@ -12,6 +12,9 @@ builder.Services.AddDbContext<DateBaseContext>(o => o.UseSqlServer(builder.Confi
 //Contenedor de dependencias
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 builder.Services.AddScoped<IParkingCellService, ParkingCellService>();
+builder.Services.AddScoped<IReservationService, ReservationService>();
+builder.Services.AddScoped<IVehicleService, VehicleService>();
+builder.Services.AddScoped<IGuestService, GuestService>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

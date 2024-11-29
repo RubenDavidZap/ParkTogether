@@ -5,54 +5,24 @@ using ParkTogether.Domain.Interfaces;
 
 namespace ParkTogether.Domain.Services
 {
-    public class ParkingCellService : IParkingCellService
+    public class VehicleService : IVehicleService
     {
         private readonly DateBaseContext _context;
 
-        public ParkingCellService(DateBaseContext context)
+        public VehicleService(DateBaseContext context)
         {
             _context = context;
         }
-        public async Task<IEnumerable<ParkingCell>> GetParkingCellAsync()
+        public async Task<Vehicle> CreateVehicleAsync(Vehicle vehicle)
         {
-
             try
             {
-                var ParkingCell = await _context.ParkingCells.ToListAsync();
-                return ParkingCell;
+                vehicle.Id = Guid.NewGuid();
+                vehicle.CreatedDate = DateTime.Now;
 
-            }
-            catch (DbUpdateConcurrencyException dbUpdateException)
-            {
-
-                throw new Exception(dbUpdateException.InnerException?.Message ?? dbUpdateException.Message);
-            }
-        }
-        public async Task<ParkingCell> GetParkingCellByIdAsync(Guid Id)
-        {
-
-            try
-            {
-                var ParkingCell = await _context.ParkingCells.FirstOrDefaultAsync(x => x.Id == Id);
-                return ParkingCell;
-            }
-            catch (DbUpdateConcurrencyException dbUpdateException)
-            {
-
-                throw new Exception(dbUpdateException.InnerException?.Message ?? dbUpdateException.Message);
-            }
-        }
-        public async Task<ParkingCell> CreateParkingCellAsync(ParkingCell parkingcell)
-        {
-
-            try
-            {
-                parkingcell.Id = Guid.NewGuid();
-                parkingcell.CreatedDate = DateTime.Now;
-
-                _context.ParkingCells.Add(parkingcell);
+                _context.Vehicles.Add(vehicle);
                 await _context.SaveChangesAsync();
-                return parkingcell;
+                return vehicle;
 
             }
             catch (DbUpdateConcurrencyException dbUpdateException)
@@ -62,33 +32,18 @@ namespace ParkTogether.Domain.Services
             }
         }
 
-        public async Task<ParkingCell> EditParkingCellAsync(ParkingCell parkingcell)
+        public async Task<Vehicle> DeleteVehicleAsync(Guid Id)
         {
             try
             {
-                parkingcell.ModifiedDate = DateTime.Now;
-                _context.ParkingCells.Update(parkingcell);
-                await _context.SaveChangesAsync();
-                return parkingcell;
-            }
-            catch (DbUpdateConcurrencyException dbUpdateException)
-            {
-
-                throw new Exception(dbUpdateException.InnerException?.Message ?? dbUpdateException.Message);
-            }
-        }
-        public async Task<ParkingCell> DeleteParkingCellAsync(Guid Id)
-        {
-            try
-            {
-                var ParkingCell = await GetParkingCellByIdAsync(Id);
-                if (ParkingCell == null)
+                var vehicle = await GetVehicleByIdAsync(Id);
+                if (vehicle == null)
                 {
                     return null;
                 }
-                _context.ParkingCells.Remove(ParkingCell);
+                _context.Vehicles.Remove(vehicle);
                 await _context.SaveChangesAsync();
-                return ParkingCell;
+                return vehicle;
             }
             catch (DbUpdateConcurrencyException dbUpdateException)
             {
@@ -97,5 +52,49 @@ namespace ParkTogether.Domain.Services
             }
         }
 
+        public async Task<Vehicle> EditVehicleAsync(Vehicle vehicle)
+        {
+            try
+            {
+                vehicle.ModifiedDate = DateTime.Now;
+                _context.Vehicles.Update(vehicle);
+                await _context.SaveChangesAsync();
+                return vehicle;
+            }
+            catch (DbUpdateConcurrencyException dbUpdateException)
+            {
+
+                throw new Exception(dbUpdateException.InnerException?.Message ?? dbUpdateException.Message);
+            }
+        }
+
+        public async Task<IEnumerable<Vehicle>> GetVehicleAsync()
+        {
+            try
+            {
+                var vehicle = await _context.Vehicles.ToListAsync();
+                return vehicle;
+
+            }
+            catch (DbUpdateConcurrencyException dbUpdateException)
+            {
+
+                throw new Exception(dbUpdateException.InnerException?.Message ?? dbUpdateException.Message);
+            }
+        }
+
+        public async Task<Vehicle> GetVehicleByIdAsync(Guid Id)
+        {
+            try
+            {
+                var vehicle = await _context.Vehicles.FirstOrDefaultAsync(x => x.Id == Id);
+                return vehicle;
+            }
+            catch (DbUpdateConcurrencyException dbUpdateException)
+            {
+
+                throw new Exception(dbUpdateException.InnerException?.Message ?? dbUpdateException.Message);
+            }
+        }
     }
 }

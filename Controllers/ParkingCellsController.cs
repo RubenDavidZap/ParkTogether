@@ -1,131 +1,88 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ParkTogether.DAL.Entities;
 using ParkTogether.Domain.Interfaces;
-using ParkTogether.DTOs;
+using ParkTogether.Domain.Services;
 
 namespace ParkTogether.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ParkingCellsController : ControllerBase
+    public class ParkingCellController : Controller
     {
         private readonly IParkingCellService _parkingCellService;
 
-        public ParkingCellsController(IParkingCellService parkingCellService)
+        public ParkingCellController(IParkingCellService parkingCellService)
         {
             _parkingCellService = parkingCellService;
-        }
 
-        [HttpGet]
+        }
+        [HttpGet, ActionName("Get")]
         [Route("GetAll")]
-        public async Task<ActionResult<IEnumerable<ParkingCell>>> GetParkingCellsAsync()
+        public async Task<ActionResult<IEnumerable<ParkingCell>>> GetParkingCellAsync()
         {
-            var parkingCells = await _parkingCellService.GetParkingCellsAsync();
-            if (parkingCells == null || !parkingCells.Any()) return NotFound();
+            var ParkingCell = await _parkingCellService.GetParkingCellAsync();
 
-            return Ok(parkingCells);
+            if (ParkingCell == null || !ParkingCell.Any()) return NotFound();
+
+            return Ok(ParkingCell);
         }
 
-        [HttpGet]
-        [Route("GetById/{id}")]
-        public async Task<ActionResult<ParkingCell>> GetParkingCellByIdAsync(Guid id)
+        [HttpGet, ActionName("Get")]
+        [Route("GetById/{Id}")]
+        public async Task<ActionResult<ParkingCell>> GetParkingCellByIdAsync(Guid Id)
         {
-            try
-            {
-                var parkingCell = await _parkingCellService.GetParkingCellByIdAsync(id);
-                if (parkingCell == null) return NotFound();
+            var ParkingCell = await _parkingCellService.GetParkingCellByIdAsync(Id);
 
-                return Ok(parkingCell);
-            }
-            catch (Exception ex)
-            {
-                return Conflict(ex.Message);
-            }
+            if (ParkingCell == null) return NotFound();
+
+            return Ok(ParkingCell);
         }
 
-        [HttpPost]
+        [HttpPost, ActionName("Create")]
         [Route("Create")]
-        public async Task<ActionResult<ParkingCell>> CreateParkingCellAsync([FromBody] ParkingCellRequest request)
+        public async Task<ActionResult<ParkingCell>> CreateParkingCellAsync(ParkingCell parkingCell)
         {
             try
             {
-                var newParkingCell = await _parkingCellService.CreateParkingCellAsync(
-                    request.ParkingCell,
-                    request.AdminName,
-                    request.AdminPassword);
-
+                var newParkingCell = await _parkingCellService.CreateParkingCellAsync(parkingCell);
+                if (newParkingCell == null) return NotFound();
                 return Ok(newParkingCell);
             }
-            catch (UnauthorizedAccessException ex)
-            {
-                return Unauthorized(ex.Message);
-            }
             catch (Exception ex)
             {
+                if (ex.Message.Contains("duplicate"))
+                    return Conflict(String.Format("{0} ya existe el parking"));
                 return Conflict(ex.Message);
             }
         }
 
-        [HttpPut]
+        [HttpPut, ActionName("Edit")]
         [Route("Edit")]
-        public async Task<ActionResult<ParkingCell>> EditParkingCellAsync([FromBody] ParkingCellRequest request)
+        public async Task<ActionResult<ParkingCell>> EditParkingCellAsync(ParkingCell parkingCell)
         {
             try
             {
-                // Verificamos si los datos requeridos están presentes
-                if (request == null || request.ParkingCell == null || string.IsNullOrEmpty(request.AdminName) || string.IsNullOrEmpty(request.AdminPassword))
-                {
-                    return BadRequest("La solicitud no es válida. Se requieren los datos de la celda y las credenciales del administrador.");
-                }
-
-                // Llamamos al servicio para editar la celda
-                var updatedParkingCell = await _parkingCellService.EditParkingCellAsync(
-                    request.ParkingCell,
-                    request.AdminName,
-                    request.AdminPassword
-                );
-
-                if (updatedParkingCell == null) return NotFound("La celda de parqueo no fue encontrada.");
-
-                return Ok(updatedParkingCell);
-            }
-            catch (UnauthorizedAccessException ex)
-            {
-                return Unauthorized(ex.Message);
+                var editedParkingCell = await _parkingCellService.EditParkingCellAsync(parkingCell);
+                if (editedParkingCell == null) return NotFound();
+                return Ok(editedParkingCell);
             }
             catch (Exception ex)
             {
+                if (ex.Message.Contains("duplicate"))
+                    return Conflict(String.Format("{0} ya existe el parking"));
                 return Conflict(ex.Message);
             }
         }
 
-        [HttpDelete]
-        [Route("Delete/{id}")]
-        public async Task<ActionResult<ParkingCell>> DeleteParkingCellAsync(Guid id, [FromHeader] string adminName, [FromHeader] string adminPassword)
+        [HttpDelete, ActionName("Delete")]
+        [Route("Delete ")]
+        public async Task<ActionResult<ParkingCell>> DeleteParkingCellAsync(Guid Id)
         {
-            try
-            {
-                // Validamos los parámetros
-                if (id == Guid.Empty || string.IsNullOrEmpty(adminName) || string.IsNullOrEmpty(adminPassword))
-                {
-                    return BadRequest("La solicitud no es válida. Se requiere el ID de la celda y las credenciales del administrador.");
-                }
-
-                // Llamamos al servicio para eliminar la celda
-                var deletedParkingCell = await _parkingCellService.DeleteParkingCellAsync(id, adminName, adminPassword);
-
-                if (deletedParkingCell == null) return NotFound("La celda de parqueo no fue encontrada.");
-
-                return Ok(deletedParkingCell);
-            }
-            catch (UnauthorizedAccessException ex)
-            {
-                return Unauthorized(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                return Conflict(ex.Message);
-            }
+            if (Id == null) return BadRequest();
+            var deletedParkingCell = await _parkingCellService.DeleteParkingCellAsync(Id);
+            if (deletedParkingCell == null) return NotFound();
+            return Ok(deletedParkingCell);
         }
+
     }
 }

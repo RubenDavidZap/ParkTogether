@@ -17,6 +17,6 @@ namespace ParkTogether.DAL.Entities
         [Required]
         public string Password { get; set; }
 
-        public ICollection<ParkingCell> ParkingCells { get; set; }
+        public ICollection<ParkingCell>? ParkingCells { get; set; }
     }
 }

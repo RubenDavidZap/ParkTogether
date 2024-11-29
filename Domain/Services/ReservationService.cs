@@ -5,54 +5,24 @@ using ParkTogether.Domain.Interfaces;
 
 namespace ParkTogether.Domain.Services
 {
-    public class ParkingCellService : IParkingCellService
+    public class ReservationService : IReservationService
     {
         private readonly DateBaseContext _context;
 
-        public ParkingCellService(DateBaseContext context)
+        public ReservationService(DateBaseContext context)
         {
             _context = context;
         }
-        public async Task<IEnumerable<ParkingCell>> GetParkingCellAsync()
+        public async Task<Reservation> CreateReservationAsync(Reservation reservation)
         {
-
             try
             {
-                var ParkingCell = await _context.ParkingCells.ToListAsync();
-                return ParkingCell;
+                reservation.Id = Guid.NewGuid();
+                reservation.CreatedDate = DateTime.Now;
 
-            }
-            catch (DbUpdateConcurrencyException dbUpdateException)
-            {
-
-                throw new Exception(dbUpdateException.InnerException?.Message ?? dbUpdateException.Message);
-            }
-        }
-        public async Task<ParkingCell> GetParkingCellByIdAsync(Guid Id)
-        {
-
-            try
-            {
-                var ParkingCell = await _context.ParkingCells.FirstOrDefaultAsync(x => x.Id == Id);
-                return ParkingCell;
-            }
-            catch (DbUpdateConcurrencyException dbUpdateException)
-            {
-
-                throw new Exception(dbUpdateException.InnerException?.Message ?? dbUpdateException.Message);
-            }
-        }
-        public async Task<ParkingCell> CreateParkingCellAsync(ParkingCell parkingcell)
-        {
-
-            try
-            {
-                parkingcell.Id = Guid.NewGuid();
-                parkingcell.CreatedDate = DateTime.Now;
-
-                _context.ParkingCells.Add(parkingcell);
+                _context.Reservations.Add(reservation);
                 await _context.SaveChangesAsync();
-                return parkingcell;
+                return reservation;
 
             }
             catch (DbUpdateConcurrencyException dbUpdateException)
@@ -62,33 +32,18 @@ namespace ParkTogether.Domain.Services
             }
         }
 
-        public async Task<ParkingCell> EditParkingCellAsync(ParkingCell parkingcell)
+        public async Task<Reservation> DeleteReservationAsync(Guid Id)
         {
             try
             {
-                parkingcell.ModifiedDate = DateTime.Now;
-                _context.ParkingCells.Update(parkingcell);
-                await _context.SaveChangesAsync();
-                return parkingcell;
-            }
-            catch (DbUpdateConcurrencyException dbUpdateException)
-            {
-
-                throw new Exception(dbUpdateException.InnerException?.Message ?? dbUpdateException.Message);
-            }
-        }
-        public async Task<ParkingCell> DeleteParkingCellAsync(Guid Id)
-        {
-            try
-            {
-                var ParkingCell = await GetParkingCellByIdAsync(Id);
-                if (ParkingCell == null)
+                var reservation = await GetReservationByIdAsync(Id);
+                if (reservation == null)
                 {
                     return null;
                 }
-                _context.ParkingCells.Remove(ParkingCell);
+                _context.Reservations.Remove(reservation);
                 await _context.SaveChangesAsync();
-                return ParkingCell;
+                return reservation;
             }
             catch (DbUpdateConcurrencyException dbUpdateException)
             {
@@ -97,5 +52,49 @@ namespace ParkTogether.Domain.Services
             }
         }
 
+        public async Task<Reservation> EditReservationAsync(Reservation reservation)
+        {
+            try
+            {
+                reservation.ModifiedDate = DateTime.Now;
+                _context.Reservations.Update(reservation);
+                await _context.SaveChangesAsync();
+                return reservation;
+            }
+            catch (DbUpdateConcurrencyException dbUpdateException)
+            {
+
+                throw new Exception(dbUpdateException.InnerException?.Message ?? dbUpdateException.Message);
+            }
+        }
+
+        public async Task<IEnumerable<Reservation>> GetReservationAsync()
+        {
+            try
+            {
+                var reservation = await _context.Reservations.ToListAsync();
+                return reservation;
+
+            }
+            catch (DbUpdateConcurrencyException dbUpdateException)
+            {
+
+                throw new Exception(dbUpdateException.InnerException?.Message ?? dbUpdateException.Message);
+            }
+        }
+
+        public async Task<Reservation> GetReservationByIdAsync(Guid Id)
+        {
+            try
+            {
+                var reservation = await _context.Reservations.FirstOrDefaultAsync(x => x.Id == Id);
+                return reservation;
+            }
+            catch (DbUpdateConcurrencyException dbUpdateException)
+            {
+
+                throw new Exception(dbUpdateException.InnerException?.Message ?? dbUpdateException.Message);
+            }
+        }
     }
 }

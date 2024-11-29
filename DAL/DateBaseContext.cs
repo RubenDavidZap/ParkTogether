@@ -16,6 +16,7 @@ namespace ParkTogether.DAL
             modelBuilder.Entity<Administrator>().HasIndex(c => c.Mail).IsUnique();
             modelBuilder.Entity<Employee>().HasIndex(c => c.Mail).IsUnique();
             modelBuilder.Entity<Employee>().HasIndex(c => c.Name).IsUnique();
+            modelBuilder.Entity<ParkingCell>().HasIndex(c => c.Location).IsUnique();
         }
         #region Dbsets
         public DbSet<Administrator> Administrators { get; set; }
