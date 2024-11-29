@@ -13,6 +13,12 @@ namespace ParkTogether.Domain.Services
         {
              _context = context;
         }
+
+        private async Task<bool> ValidateAdminAsync(string adminName, string adminPassword)
+        {
+            return await _context.Administrators.AnyAsync(a => a.Name == adminName && a.Password == adminPassword);
+        }
+
         public async Task<IEnumerable<Employee>> GetEmployeeAsync()
         {
             
@@ -42,9 +48,11 @@ namespace ParkTogether.Domain.Services
                 throw new Exception(dbUpdateException.InnerException?.Message ?? dbUpdateException.Message);
             }
         }
-        public async Task<Employee> CreateEmployeeAsync(Employee employee)
+        public async Task<Employee> CreateEmployeeAsync(Employee employee, string adminName, string adminPassword)
         {
-           
+            if (!await ValidateAdminAsync(adminName, adminPassword))
+                throw new UnauthorizedAccessException("Credenciales de administrador no válidas.");
+
             try
             {
                 employee.Id = Guid.NewGuid();
@@ -57,13 +65,15 @@ namespace ParkTogether.Domain.Services
             }
             catch (DbUpdateConcurrencyException dbUpdateException)
             {
-
-                throw new Exception(dbUpdateException.InnerException?.Message ?? dbUpdateException.Message );
+                throw new Exception(dbUpdateException.InnerException?.Message ?? dbUpdateException.Message);
             }
         }
 
-        public async Task<Employee> EditEmployeeAsync(Employee employee)
+        public async Task<Employee> EditEmployeeAsync(Employee employee, string adminName, string adminPassword)
         {
+            if (!await ValidateAdminAsync(adminName, adminPassword))
+                throw new UnauthorizedAccessException("Credenciales de administrador no válidas.");
+
             try
             {
                 employee.ModifiedDate = DateTime.Now;
@@ -73,26 +83,26 @@ namespace ParkTogether.Domain.Services
             }
             catch (DbUpdateConcurrencyException dbUpdateException)
             {
-
                 throw new Exception(dbUpdateException.InnerException?.Message ?? dbUpdateException.Message);
             }
         }
-        public async Task<Employee> DeleteEmployeeAsync(Guid Id)
+        public async Task<Employee> DeleteEmployeeAsync(Guid Id, string adminName, string adminPassword)
         {
+            if (!await ValidateAdminAsync(adminName, adminPassword))
+                throw new UnauthorizedAccessException("Credenciales de administrador no válidas.");
+
             try
             {
                 var employee = await GetEmployeeByIdAsync(Id);
-                if (employee == null) 
-                {
+                if (employee == null)
                     return null;
-                }
+
                 _context.Employees.Remove(employee);
                 await _context.SaveChangesAsync();
                 return employee;
             }
             catch (DbUpdateConcurrencyException dbUpdateException)
             {
-
                 throw new Exception(dbUpdateException.InnerException?.Message ?? dbUpdateException.Message);
             }
         }

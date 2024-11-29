@@ -14,75 +14,89 @@ namespace ParkTogether.Controllers
         public ParkingCellController(IParkingCellService parkingCellService)
         {
             _parkingCellService = parkingCellService;
-
         }
+
         [HttpGet, ActionName("Get")]
         [Route("GetAll")]
         public async Task<ActionResult<IEnumerable<ParkingCell>>> GetParkingCellAsync()
         {
-            var ParkingCell = await _parkingCellService.GetParkingCellAsync();
+            var parkingCells = await _parkingCellService.GetParkingCellAsync();
 
-            if (ParkingCell == null || !ParkingCell.Any()) return NotFound();
+            if (parkingCells == null || !parkingCells.Any()) return NotFound();
 
-            return Ok(ParkingCell);
+            return Ok(parkingCells);
         }
 
         [HttpGet, ActionName("Get")]
         [Route("GetById/{Id}")]
         public async Task<ActionResult<ParkingCell>> GetParkingCellByIdAsync(Guid Id)
         {
-            var ParkingCell = await _parkingCellService.GetParkingCellByIdAsync(Id);
+            var parkingCell = await _parkingCellService.GetParkingCellByIdAsync(Id);
 
-            if (ParkingCell == null) return NotFound();
+            if (parkingCell == null) return NotFound();
 
-            return Ok(ParkingCell);
+            return Ok(parkingCell);
         }
 
         [HttpPost, ActionName("Create")]
         [Route("Create")]
-        public async Task<ActionResult<ParkingCell>> CreateParkingCellAsync(ParkingCell parkingCell)
+        public async Task<ActionResult<ParkingCell>> CreateParkingCellAsync([FromBody] ParkingCell parkingCell, [FromQuery] string adminName, [FromQuery] string adminPassword)
         {
             try
             {
-                var newParkingCell = await _parkingCellService.CreateParkingCellAsync(parkingCell);
+                var newParkingCell = await _parkingCellService.CreateParkingCellAsync(parkingCell, adminName, adminPassword);
                 if (newParkingCell == null) return NotFound();
                 return Ok(newParkingCell);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Unauthorized("Credenciales de administrador no válidas.");
             }
             catch (Exception ex)
             {
                 if (ex.Message.Contains("duplicate"))
-                    return Conflict(String.Format("{0} ya existe el parking"));
+                    return Conflict($"{parkingCell.Location} ya existe la celda de parqueo.");
                 return Conflict(ex.Message);
             }
         }
 
         [HttpPut, ActionName("Edit")]
         [Route("Edit")]
-        public async Task<ActionResult<ParkingCell>> EditParkingCellAsync(ParkingCell parkingCell)
+        public async Task<ActionResult<ParkingCell>> EditParkingCellAsync([FromBody] ParkingCell parkingCell, [FromQuery] string adminName, [FromQuery] string adminPassword)
         {
             try
             {
-                var editedParkingCell = await _parkingCellService.EditParkingCellAsync(parkingCell);
+                var editedParkingCell = await _parkingCellService.EditParkingCellAsync(parkingCell, adminName, adminPassword);
                 if (editedParkingCell == null) return NotFound();
                 return Ok(editedParkingCell);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Unauthorized("Credenciales de administrador no válidas.");
             }
             catch (Exception ex)
             {
                 if (ex.Message.Contains("duplicate"))
-                    return Conflict(String.Format("{0} ya existe el parking"));
+                    return Conflict($"{parkingCell.Location} ya existe la celda de parqueo.");
                 return Conflict(ex.Message);
             }
         }
 
         [HttpDelete, ActionName("Delete")]
-        [Route("Delete ")]
-        public async Task<ActionResult<ParkingCell>> DeleteParkingCellAsync(Guid Id)
+        [Route("Delete")]
+        public async Task<ActionResult<ParkingCell>> DeleteParkingCellAsync([FromQuery] Guid Id, [FromQuery] string adminName, [FromQuery] string adminPassword)
         {
-            if (Id == null) return BadRequest();
-            var deletedParkingCell = await _parkingCellService.DeleteParkingCellAsync(Id);
-            if (deletedParkingCell == null) return NotFound();
-            return Ok(deletedParkingCell);
+            try
+            {
+                var deletedParkingCell = await _parkingCellService.DeleteParkingCellAsync(Id, adminName, adminPassword);
+                if (deletedParkingCell == null) return NotFound();
+                return Ok(deletedParkingCell);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Unauthorized("Credenciales de administrador no válidas.");
+            }
         }
-
     }
 }
+

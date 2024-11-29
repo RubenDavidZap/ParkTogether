@@ -41,50 +41,62 @@ namespace ParkTogether.Controllers
 
         [HttpPost, ActionName("Create")]
         [Route("Create")]
-        public async Task<ActionResult<Employee>> CreateEmployeeAsync(Employee employee)
+        public async Task<ActionResult<Employee>> CreateEmployeeAsync([FromBody] Employee employee, [FromQuery] string adminName, [FromQuery] string adminPassword)
         {
             try
             {
-                var newEmployee = await _employeeService.CreateEmployeeAsync(employee); 
+                var newEmployee = await _employeeService.CreateEmployeeAsync(employee, adminName, adminPassword);
                 if (newEmployee == null) return NotFound();
                 return Ok(newEmployee);
             }
+            catch (UnauthorizedAccessException)
+            {
+                return Unauthorized("Credenciales de administrador no válidas.");
+            }
             catch (Exception ex)
             {
-                if(ex.Message.Contains("duplicate"))
-                   return Conflict(String.Format("{0} ya existe el empleado", employee.Name));
+                if (ex.Message.Contains("duplicate"))
+                    return Conflict($"{employee.Name} ya existe el empleado.");
                 return Conflict(ex.Message);
             }
         }
 
         [HttpPut, ActionName("Edit")]
         [Route("Edit")]
-        public async Task<ActionResult<Employee>> EditEmployeeAsync(Employee employee)
+        public async Task<ActionResult<Employee>> EditEmployeeAsync([FromBody] Employee employee, [FromQuery] string adminName, [FromQuery] string adminPassword)
         {
             try
             {
-                var editedEmployee = await _employeeService.EditEmployeeAsync(employee);
+                var editedEmployee = await _employeeService.EditEmployeeAsync(employee, adminName, adminPassword);
                 if (editedEmployee == null) return NotFound();
                 return Ok(editedEmployee);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Unauthorized("Credenciales de administrador no válidas.");
             }
             catch (Exception ex)
             {
                 if (ex.Message.Contains("duplicate"))
-                    return Conflict(String.Format("{0} ya existe el empleado", employee.Name));
+                    return Conflict($"{employee.Name} ya existe el empleado.");
                 return Conflict(ex.Message);
             }
         }
 
         [HttpDelete, ActionName("Delete")]
-        [Route("Delete ")]
-        public async Task<ActionResult<Employee>> DeleteEmployeeAsync(Guid Id)
+        [Route("Delete")]
+        public async Task<ActionResult<Employee>> DeleteEmployeeAsync([FromQuery] Guid Id, [FromQuery] string adminName, [FromQuery] string adminPassword)
         {
-            if(Id == null) return BadRequest();
-            var deletedEmployee = await _employeeService.DeleteEmployeeAsync(Id);
-            if (deletedEmployee == null) return NotFound();
-            return Ok(deletedEmployee);
-            
-            
+            try
+            {
+                var deletedEmployee = await _employeeService.DeleteEmployeeAsync(Id, adminName, adminPassword);
+                if (deletedEmployee == null) return NotFound();
+                return Ok(deletedEmployee);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Unauthorized("Credenciales de administrador no válidas.");
+            }
         }
     }
 }
