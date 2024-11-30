@@ -162,7 +162,7 @@ namespace ParkTogether.Migrations
                     b.Property<Guid>("EmployeeId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("GuestId")
+                    b.Property<Guid?>("GuestId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("ModifiedDate")
@@ -177,7 +177,7 @@ namespace ParkTogether.Migrations
                     b.Property<DateTime>("Time")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("VehicleId")
+                    b.Property<Guid?>("VehicleId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
@@ -199,16 +199,17 @@ namespace ParkTogether.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("Color")
-                        .HasColumnType("int");
+                    b.Property<string>("Color")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("EmployeeId")
+                    b.Property<Guid?>("EmployeeId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("GuestId")
+                    b.Property<Guid?>("GuestId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Mark")
@@ -253,9 +254,7 @@ namespace ParkTogether.Migrations
 
                     b.HasOne("ParkTogether.DAL.Entities.Guest", "Guest")
                         .WithMany("Reservations")
-                        .HasForeignKey("GuestId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("GuestId");
 
                     b.HasOne("ParkTogether.DAL.Entities.ParkingCell", "ParkingCell")
                         .WithMany("Reservations")
@@ -265,9 +264,7 @@ namespace ParkTogether.Migrations
 
                     b.HasOne("ParkTogether.DAL.Entities.Vehicle", "Vehicle")
                         .WithMany("Reservations")
-                        .HasForeignKey("VehicleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("VehicleId");
 
                     b.Navigation("Employee");
 
@@ -282,15 +279,11 @@ namespace ParkTogether.Migrations
                 {
                     b.HasOne("ParkTogether.DAL.Entities.Employee", "Employee")
                         .WithMany("Vehicles")
-                        .HasForeignKey("EmployeeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("EmployeeId");
 
                     b.HasOne("ParkTogether.DAL.Entities.Guest", "Guest")
                         .WithMany("Vehicles")
-                        .HasForeignKey("GuestId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("GuestId");
 
                     b.Navigation("Employee");
 

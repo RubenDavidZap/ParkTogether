@@ -32,7 +32,7 @@ namespace ParkTogether.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Mark = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
                     Model = table.Column<int>(type: "int", maxLength: 4, nullable: false),
-                    Color = table.Column<int>(type: "int", nullable: false),
+                    Color = table.Column<int>(type: "nvarchar(10)", nullable: false),
                     EmployeeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     GuestId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),

@@ -9,7 +9,7 @@ namespace ParkTogether.DAL.Entities
         [Required]
         public string Name { get; set; }
 
-        public ICollection<Vehicle> Vehicles { get; set; }
-        public ICollection<Reservation> Reservations { get; set; }
+        public ICollection<Vehicle>? Vehicles { get; set; }
+        public ICollection<Reservation>? Reservations { get; set; }
     }
 }

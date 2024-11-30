@@ -14,19 +14,19 @@ namespace ParkTogether.DAL.Entities
         [Required]
         public int Model { get; set; }
                 
-        public int Color { get; set; }
+        public string Color { get; set; }
 
         public Employee? Employee { get; set; }
 
         [Display(Name = "Id Empleado")]
-        public Guid EmployeeId { get; set; }
+        public Guid? EmployeeId { get; set; }
 
         public Guest? Guest { get; set; }
 
         [Display(Name = "Id Invitado")]
-        public Guid GuestId { get; set; }
+        public Guid? GuestId { get; set; }
 
-        public ICollection<Reservation> Reservations { get; set; }
+        public ICollection<Reservation>? Reservations { get; set; }
 
     }
 }

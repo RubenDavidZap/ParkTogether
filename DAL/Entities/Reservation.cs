@@ -25,11 +25,11 @@ namespace ParkTogether.DAL.Entities
         public Guest? Guest { get; set; }
 
         [Display(Name = "Id Invitado")]
-        public Guid GuestId { get; set; }
+        public Guid? GuestId { get; set; }
 
         public Vehicle? Vehicle { get; set; }
 
         [Display(Name = "Placa")]
-        public Guid VehicleId { get; set; }
+        public Guid? VehicleId { get; set; }
     }
 }
