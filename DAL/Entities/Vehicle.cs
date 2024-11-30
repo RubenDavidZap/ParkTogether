@@ -10,7 +10,6 @@ namespace ParkTogether.DAL.Entities
         public string Mark { get; set; }
 
         [Display(Name = "Modelo")]
-        [MaxLength(4)]
         [Required]
         public int Model { get; set; }
                 
