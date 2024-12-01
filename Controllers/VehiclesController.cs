@@ -70,7 +70,7 @@ namespace ParkTogether.Controllers
             catch (Exception ex)
             {
                 if (ex.Message.Contains("duplicate"))
-                    return Conflict(String.Format("{0} ya existe el empleado"));
+                    return Conflict(String.Format("{0} ya existe"));
                 return Conflict(ex.Message);
             }
         }
