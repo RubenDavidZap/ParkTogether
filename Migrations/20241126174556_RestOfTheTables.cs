@@ -26,7 +26,7 @@ namespace ParkTogether.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Vehicle",
+                name: "Vehicles",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -56,7 +56,7 @@ namespace ParkTogether.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Reservation",
+                name: "Reservations",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -64,8 +64,8 @@ namespace ParkTogether.Migrations
                     Status = table.Column<bool>(type: "bit", nullable: false),
                     Area = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     ParkingCellId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    EmployeeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    GuestId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    EmployeeId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    GuestId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     VehicleId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: false)
@@ -94,39 +94,39 @@ namespace ParkTogether.Migrations
                     table.ForeignKey(
                         name: "FK_Reservation_Vehicle_VehicleId",
                         column: x => x.VehicleId,
-                        principalTable: "Vehicle",
+                        principalTable: "Vehicles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Reservation_EmployeeId",
-                table: "Reservation",
+                table: "Reservations",
                 column: "EmployeeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Reservation_GuestId",
-                table: "Reservation",
+                table: "Reservations",
                 column: "GuestId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Reservation_ParkingCellId",
-                table: "Reservation",
+                table: "Reservations",
                 column: "ParkingCellId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Reservation_VehicleId",
-                table: "Reservation",
+                table: "Reservations",
                 column: "VehicleId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Vehicle_EmployeeId",
-                table: "Vehicle",
+                table: "Vehicles",
                 column: "EmployeeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Vehicle_GuestId",
-                table: "Vehicle",
+                table: "Vehicles",
                 column: "GuestId");
         }
 
@@ -134,10 +134,10 @@ namespace ParkTogether.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Reservation");
+                name: "Reservations");
 
             migrationBuilder.DropTable(
-                name: "Vehicle");
+                name: "Vehicles");
 
             migrationBuilder.DropTable(
                 name: "Guests");

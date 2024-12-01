@@ -7,12 +7,12 @@ namespace ParkTogether.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class VehicleController:Controller
+    public class VehiclesController:Controller
     {
         private readonly IVehicleService _vehicleService;
 
 
-        public VehicleController(IVehicleService vehicleService)
+        public VehiclesController(IVehicleService vehicleService)
         {
             _vehicleService = vehicleService;
 
