@@ -32,6 +32,7 @@ void SeederData()
         service.SeederAsync().Wait();
     }
 }
+//In this project only Juan Andres Ramirez works and Ruben David Zapata
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
