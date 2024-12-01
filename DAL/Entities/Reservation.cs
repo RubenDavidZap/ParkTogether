@@ -12,7 +12,7 @@ namespace ParkTogether.DAL.Entities
         [Required]
         public bool Status { get; set; }
 
-        public ParkingCell ParkingCell { get; set; }
+        public ParkingCell? ParkingCell { get; set; }
 
         [Display(Name = "Id Celda")]
         public Guid ParkingCellId { get; set; }
@@ -20,14 +20,14 @@ namespace ParkTogether.DAL.Entities
         public Employee? Employee { get; set; }
 
         [Display(Name = "Id Empleado")]
-        public Guid? EmployeeId { get; set; }
+        public Guid EmployeeId { get; set; }
 
         public Guest? Guest { get; set; }
 
         [Display(Name = "Id Invitado")]
         public Guid? GuestId { get; set; }
 
-        public Vehicle Vehicle { get; set; }
+        public Vehicle? Vehicle { get; set; }
 
         [Display(Name = "Placa")]
         public Guid VehicleId { get; set; }

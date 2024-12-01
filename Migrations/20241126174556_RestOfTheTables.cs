@@ -62,7 +62,6 @@ namespace ParkTogether.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Time = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Status = table.Column<bool>(type: "bit", nullable: false),
-                    Area = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     ParkingCellId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     EmployeeId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     GuestId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),

@@ -159,7 +159,7 @@ namespace ParkTogether.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("EmployeeId")
+                    b.Property<Guid?>("EmployeeId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("GuestId")
@@ -177,7 +177,7 @@ namespace ParkTogether.Migrations
                     b.Property<DateTime>("Time")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("VehicleId")
+                    b.Property<Guid>("VehicleId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
@@ -218,7 +218,6 @@ namespace ParkTogether.Migrations
                         .HasColumnType("nvarchar(10)");
 
                     b.Property<int>("Model")
-                        .HasMaxLength(4)
                         .HasColumnType("int");
 
                     b.Property<DateTime>("ModifiedDate")
@@ -248,9 +247,7 @@ namespace ParkTogether.Migrations
                 {
                     b.HasOne("ParkTogether.DAL.Entities.Employee", "Employee")
                         .WithMany("Reservations")
-                        .HasForeignKey("EmployeeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("EmployeeId");
 
                     b.HasOne("ParkTogether.DAL.Entities.Guest", "Guest")
                         .WithMany("Reservations")
@@ -264,7 +261,9 @@ namespace ParkTogether.Migrations
 
                     b.HasOne("ParkTogether.DAL.Entities.Vehicle", "Vehicle")
                         .WithMany("Reservations")
-                        .HasForeignKey("VehicleId");
+                        .HasForeignKey("VehicleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Employee");
 
